@@ -23,15 +23,16 @@ from tools import generate_detections as gdet
 from deep_sort.detection import Detection as ddet
 # from keras import backend
 from tensorflow.keras import backend
-config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
-tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.5)
-config.gpu_options.allow_growth = True
 
 import crash_area as clt
 import os
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
-# import crash_area
+import tensorflow as tf
+config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
+tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.5)
+config.gpu_options.allow_growth = True
+
 
 backend.clear_session()
 warnings.filterwarnings('ignore')

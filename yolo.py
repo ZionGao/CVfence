@@ -15,11 +15,18 @@ import numpy as np
 from tensorflow.keras import backend as K
 import tensorflow as tf
 tf.compat.v1.disable_v2_behavior()
+
+
 from keras.models import load_model
 from PIL import Image, ImageFont, ImageDraw
 
 from yolo3.model import yolo_eval
 from yolo3.utils import letterbox_image
+
+config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
+tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.5)
+config.gpu_options.allow_growth = True
+
 
 class YOLO(object):
     def __init__(self):
