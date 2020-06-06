@@ -23,6 +23,8 @@ from tools import generate_detections as gdet
 from deep_sort.detection import Detection as ddet
 from keras import backend
 import crash_area as clt
+import os
+os.environ['KMP_DUPLICATE_LIB_OK']='True'
 
 # import crash_area
 
