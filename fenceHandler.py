@@ -34,6 +34,7 @@ np.random.seed(100)
 COLORS = np.random.randint(0, 255, size=(200, 3), dtype="uint8")
 
 class Fence():
+
     def __init__(self):
         self.yolo = YOLO()
         self.max_cosine_distance = 0.3
@@ -46,9 +47,12 @@ class Fence():
         self.id_cnt_dict = {}
         self.queue_dict = {}
 
-    # 初始化敏感区域 输入图像点选保存坐标
-    # input : image shape w*h*3
     def initArea(self,image):
+        '''
+        初始化敏感区域 输入图像点选保存坐标
+        :param image: hape w*h*3
+        :return:
+        '''
         def on_EVENT_LBUTTONDOWN(event, x, y, flags, param):
             if event == cv2.EVENT_LBUTTONDOWN:
                 xy = "%d,%d" % (x, y)
@@ -71,14 +75,22 @@ class Fence():
                 break
         cv2.destroyWindow("image")
         return self.poly
-    # 初始化敏感区域 输入区域坐标顶点[[float(x), float(y)]...]
-    # input : image shape w*h*3
+
+
     def initPoly(self,poly):
+        '''
+        初始化敏感区域
+        :param poly: 输入区域坐标顶点[[float(x), float(y)]...]
+        :return:
+        '''
         self.poly = poly
-    # 只用检测模型获取bbox，输出不包含目标id
-    # input : image shape w*h*3
-    # output : bboxes[[min x, min y, max x, max y]...]
+
     def detect(self,image):
+        '''
+        只用检测模型获取bbox，输出不包含目标id
+        :param image: shape w*h*3
+        :return: bboxes[[min x, min y, max x, max y]...]
+        '''
         img = Image.fromarray(image[..., ::-1])  # bgr to rgb
         boxs, ret_clss = self.yolo.detect_image(img)
 
@@ -101,12 +113,13 @@ class Fence():
 
         return bboxes, ret_clss, detections
 
-    # 检测跟踪获取bbox
-    # input : image shape w*h*3
-    # output : b   [[min x, min y, max x, max y]...]
-    #          t   [id1,id2,id3...]
-
     def trackByDetect(self,image):
+        '''
+        检测跟踪获取bbox
+        :param image: shape w*h*3
+        :return: b   [[min x, min y, max x, max y]...]
+                 t   [id1,id2,id3...]
+        '''
 
         bbox, ret_clss,detections = self.detect(image)
 
@@ -128,20 +141,26 @@ class Fence():
 
         return  b,c,t
 
-    # 判断bbox中心是否在敏感区域中
-    # input : bboxes [[min x, min y, max x, max y]...]
-    # output : isIn   [True,False,True....]
+
     def entanceAlert(self,bboxes):
+        '''
+        判断bbox中心是否在敏感区域中
+        :param bboxes: [[min x, min y, max x, max y]...]
+        :return: isIn :[True,False,True....]
+        '''
         assert len(self.poly) == 4 , '未初始化四边形铭感区域'
         isIn = [ self.winding_number(int(((bbox[0]) + (bbox[2])) / 2), int(((bbox[1]) + (bbox[3])) / 2)) == 'in' for bbox in bboxes  ]
         return isIn
 
-    # 区域坐标与中心坐标关系判断
-    # input : bboxes [x,y]
-    # output : "on" 边界线上
-    # output : "in" 区域内
-    # output : "out" 区域外
+
     def winding_number(self,point):
+        '''
+        区域坐标与中心坐标关系判断
+        :param point: [x,y]
+        :return: "on" 边界线上
+                 "in" 区域内
+                 "out" 区域外
+        '''
         self.poly.append(self.poly[0])
         px = point[0]
         py = point[1]
@@ -206,6 +225,7 @@ def main():
 
     ret, frame = video_capture.read()
 
+    # 1 初始化电子围栏对象
     f = Fence()
     f.initArea(frame)
     tracker = f.tracker
@@ -217,7 +237,7 @@ def main():
             break
         t1 = time.time()
 
-
+        #  2 输入图像获取跟踪信息
         b,c,t = f.trackByDetect(frame)
 
         tracks = zip(b,c,t)
