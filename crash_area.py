@@ -6,7 +6,7 @@ import time
 
 poly = []
 
-def set_area(img):
+def set_area(img,area):
     def on_EVENT_LBUTTONDOWN(event, x, y, flags, param):
         if event == cv2.EVENT_LBUTTONDOWN:
             xy = "%d,%d" % (x, y)
@@ -15,6 +15,7 @@ def set_area(img):
             cv2.putText(img, xy, (x, y), cv2.FONT_HERSHEY_PLAIN,
                         1.0, (0, 0, 0), thickness=1)
             poly.append([float(x), float(y)])
+            area.append([float(x), float(y)])
             print(len(poly))
             cv2.imshow("image", img)
 
