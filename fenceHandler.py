@@ -93,10 +93,6 @@ class Fence():
         '''
         img = Image.fromarray(image[..., ::-1])  # bgr to rgb
         boxs, ret_clss = self.yolo.detect_image(img)
-
-        boxs = [boxs[i] for i in range(0,len(ret_clss)) if ret_clss[i] == ['person']]
-        ret_clss = [['person']*len(boxs)]
-
         features = self.encoder(image, boxs)  # The image of each frame is coded to match the box
         # score to 1.0 here).  Each detection box and feature is encapsulated as an object
         detections = [Detection(bbox, 1.0, feature, ret_cls) for bbox, feature, ret_cls in
