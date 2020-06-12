@@ -111,9 +111,8 @@ class YOLO(object):
         return_cls = []
         for i, c in reversed(list(enumerate(out_classes))):
             predicted_class = self.class_names[c]
-            # if predicted_class !=  "keyboard" :
-            #     if predicted_class != "person":
-            #         continue
+            if predicted_class != "person":
+                continue
 
             box = out_boxes[i]
 
