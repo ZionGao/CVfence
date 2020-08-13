@@ -20,6 +20,7 @@ from tensorflow.keras import backend
 import tensorflow as tf
 import os
 import time
+import pickle
 
 
 os.environ['KMP_DUPLICATE_LIB_OK']='True'
@@ -218,7 +219,9 @@ class Fence():
 def main():
 
 
-    video_capture = cv2.VideoCapture("test.mp4")
+    # video_capture = cv2.VideoCapture("test.mp4")
+    video_capture = cv2.VideoCapture(0)
+
     fps = 0.0
     cnt = 0
 
@@ -311,6 +314,55 @@ def main():
     video_capture.release()
     cv2.destroyAllWindows()
 
+def handleFaceCv(buf,FACE_OBJECT):
+    #global FACE_OBJECT
+    print('handleFaceCv .....')
+    image = np.asarray(bytearray(buf), dtype="uint8")
+    frame = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    #print('frame:shape--',frame.shape,'frame:',frame)
+    image = cv2.imread(frame)
+    print('cv2.imread:=',image)
+    image = Image.fromarray(cv2.cvtColor(image,cv2.COLOR_BGR2RGB))
+    print('image:shape--',image.shape,'image:',image)
+
+
 
 if __name__ == '__main__':
-    main()
+    # main()
+    # video_capture = cv2.VideoCapture("test.mp4")
+    f = Fence()
+
+    pkl_file = open('data.pk3', 'rb')
+
+    list = pickle.load(pkl_file)
+    print(list)
+
+    for buf in list:
+        print(buf)
+        print(bytearray(buf))
+        image = np.asarray(bytearray(buf), dtype="uint8")
+        frame = cv2.imdecode(image, cv2.IMREAD_COLOR)
+        cv2.namedWindow("image")
+        cv2.imshow("image", frame)
+        cv2.waitKey(200)
+
+        print(frame.shape)
+        a,b,c = f.trackByDetect(frame)
+        print(a,b,c)
+
+
+
+
+
+
+
+
+        # while True:
+    #     ret, frame = video_capture.read()
+    #     if ret != True:
+    #         break
+    #     b, c, t = f.trackByDetect(frame)
+    #     print(b,c,t)
+
+
+    pkl_file.close()

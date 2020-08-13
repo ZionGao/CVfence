@@ -22,6 +22,7 @@ from deep_sort.tracker import Tracker
 from tools import generate_detections as gdet
 from deep_sort.detection import Detection as ddet
 # from keras import backend
+import tensorflow as tf
 from tensorflow.keras import backend
 config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
 tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.5)

@@ -18,6 +18,7 @@ def compose(*funcs):
 def letterbox_image(image, size):
     '''resize image with unchanged aspect ratio using padding'''
     image_w, image_h = image.size
+    print(image_w, image_h)
     w, h = size
     new_w = int(image_w * min(w*1.0/image_w, h*1.0/image_h))
     new_h = int(image_h * min(w*1.0/image_w, h*1.0/image_h))

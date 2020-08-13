@@ -27,7 +27,7 @@ config = tf.compat.v1.ConfigProto(allow_soft_placement = True)
 tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction = 0.5)
 config.gpu_options.allow_growth = True
 
-
+#aa
 class YOLO(object):
     def __init__(self):
         self.model_path = 'model_data/yolo.h5'
